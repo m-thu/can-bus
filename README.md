@@ -84,32 +84,32 @@ config-pin p9.26 can
 # Current mode for P9_24 is:     can
 # Current mode for P9_26 is:     can
 
-# Bring up can0 interface with 500 kbit/s
-ip link set can0 up type can bitrate 500000
+# Bring up can1 interface with 500 kbit/s
+ip link set can1 up type can bitrate 500000
 
-ip addr show dev can0
+ip addr show dev can1
 
-#2: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP group default qlen 10
+#3: can1: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP group default qlen 10
 #    link/can
 ```
 
 CAN-utils:
 ```sh
 # Show load on CAN bus
-canbusload can0@500000
+canbusload can1@500000
 
-# can0@500000     0       0      0   0%
+# can1@500000     0       0      0   0%
 #
-# can0@500000     0       0      0   0%
+# can1@500000     0       0      0   0%
 
 # Generate random CAN messages
-cangen can0
+cangen can1
 
 # Display CAN messages
-candump can0
+candump can1
 
 # Send CAN message with ID 0x123 and 8 bytes of data
-cansend can0 123#11.22.33.44.55.66.77.88
+cansend can1 123#11.22.33.44.55.66.77.88
 ```
 
 Bring up CAN interface automatically at startup (from <https://www.beyondlogic.org/adding-can-to-the-beaglebone-black/>, <https://www.thomas-wedemeyer.de/beaglebone-canbus-python.html>, run as root):
@@ -118,18 +118,13 @@ Bring up CAN interface automatically at startup (from <https://www.beyondlogic.o
 echo -e '\n# Configure pins 24, 26 as CAN1\nuboot_overlay_addr4=/lib/firmware/BB-CAN1-00A0.dtbo' >>/boot/uEnv.txt
 
 # Bring up can0 (DCAN1 interface) at startup
-echo -e '\n# Bring up can0 (DCAN1 interface) with 500 kbit/s\nallow-hotplug can0\niface can0 can static\n\tbitrate 500000' >>/etc/network/interfaces
+echo -e '\n# Bring up can1 (DCAN1 interface) with 500 kbit/s\nallow-hotplug can1\niface can1 can static\n\tbitrate 500000' >>/etc/network/interfaces
 
-# Check if can0 device is up
-ip addr show dev can0
+# Check if can1 device is up
+ip addr show dev can1
 
-#2: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
-#    link/can  promiscuity 0 minmtu 0 maxmtu 0
-#    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
-#          bitrate 500000 sample-point 0.875
-#          tq 125 prop-seg 6 phase-seg1 7 phase-seg2 2 sjw 1
-#          c_can: tseg1 2..16 tseg2 1..8 sjw 1..4 brp 1..1024 brp-inc 1
-#          clock 24000000numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+#3: can1: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP group default qlen 10
+#    link/can
 ```
 
 # SocketCAN
